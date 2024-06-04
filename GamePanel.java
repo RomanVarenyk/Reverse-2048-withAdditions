@@ -3,12 +3,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GamePanel extends JPanel {
-
     // Screen size settings
     private static final int SCREEN_WIDTH = 600;
     private static final int SCREEN_HEIGHT = 600;
 
-    // set square size
+    // Set square size
     private static final int TILE_SIZE = SCREEN_WIDTH / 7;
 
     // Create board 2D-list
@@ -18,15 +17,12 @@ public class GamePanel extends JPanel {
     int horPad = SCREEN_WIDTH / 6; // horizontal padding
     int verPad = SCREEN_HEIGHT / 6; // vertical padding
     int boardSize = SCREEN_WIDTH - (horPad * 2);
-    int tilePad = TILE_SIZE / 7; // padding between tiles 
+    int tilePad = TILE_SIZE / 7; // padding between tiles
 
     private boolean running;
-
     // Notes: 2048 should spawn 90% of the time, and 1024 should spawn 10% of the time. Initially, two 2048's should spawn in random places
 
-    
     public GamePanel() {
-
         // Set size
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setFocusable(true); // allows keyboard inputs to go directly to GamePanel
@@ -51,7 +47,6 @@ public class GamePanel extends JPanel {
                         running = false;
                     }
                 }
-                
             }
         });
 
@@ -81,7 +76,9 @@ public class GamePanel extends JPanel {
         // Draw tiles
         for (int r = 0; r < 4; r++) {
             int tileY = verPad + ((r+1) * tilePad) + (r * TILE_SIZE);
+
             for (int c = 0; c < 4; c++) {
+
                 int tileX = horPad + ((c+1) * tilePad) + (c * TILE_SIZE);
                 board[r][c].draw(tileX, tileY, TILE_SIZE, g);
             }
@@ -128,12 +125,15 @@ public class GamePanel extends JPanel {
         }
         return true;
     }
+
     /**
      * If board is all filled after a movement has been made, see if there are any possible combinations left
      * @return true if game is over
      */
     public boolean checkLost() {
-        if (!isFull()) { return false; } // check if board is fully occupied
+        if (!isFull()) {
+            return false;
+        } // check if board is fully occupied
         // Horizontal check
         for (int r = 0; r < 4; r++) {
             for (int c = 0; c < 3; c++) {
@@ -153,6 +153,7 @@ public class GamePanel extends JPanel {
         // If no combinations were found, return true
         return true;
     }
+
     /**
      * Unlocks a row or column of Tiles after movement has finished
      */
@@ -180,7 +181,7 @@ public class GamePanel extends JPanel {
                 spawned = true;
             }
         }
-        
+
     }
 
     /**
@@ -223,19 +224,19 @@ public class GamePanel extends JPanel {
                         board[r][c] = new Tile(0);
                         repaint();
                         pause(5);
-                        c = 0; // reset after change 
+                        c = 0; // reset after change
                         hasMoved = true;
                     }
-                }  
+                }
             }
             // Unlock row
             unlock(board[r]);
             repaint();
-        }       
+        }
         if (hasMoved) {
             spawn();
         }
-        
+
     }
 
     public void moveRight() {
@@ -261,10 +262,10 @@ public class GamePanel extends JPanel {
             }
             unlock(board[r]);
             repaint();
-        }       
+        }
         if (hasMoved) {
             spawn();
-        }   
+        }
     }
 
     public void moveDown() {
@@ -290,10 +291,10 @@ public class GamePanel extends JPanel {
             }
             unlock(makeColumn(c));
             repaint();
-        }  
+        }
         if (hasMoved) {
             spawn();
-        }   
+        }
     }
 
     public void moveUp() {
@@ -312,19 +313,23 @@ public class GamePanel extends JPanel {
                         board[r - 1][c].setLocked(true);
                         board[r][c] = new Tile(0);
                         repaint();
-                        r = 0; // reset after change 
+                        r = 0; // reset after change
                         hasMoved = true;
                     }
-                }  
+                }
             }
             // Unlock row
             unlock(makeColumn(c));
             repaint();
-        }       
+        }
         if (hasMoved) {
             spawn();
         }
     }
-
-
+// Added resetGame, basic function elaborated on in GameFrame
+    public void resetGame() {
+        populateBoard();
+        running = true;
+        repaint();
+    }
 }
